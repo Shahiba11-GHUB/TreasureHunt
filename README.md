@@ -47,15 +47,17 @@ Check out the working demo of TreasureHunt in action:
 
 ## Screenshots
 
-| Home Page | Auction Item Page |
+| Home Page  | Home Page Login |
 |-----------|-------------------|
-| ![Homepage](screenshots/homepage.png) | ![Item Page](screenshots/item-page.png) |
+| ![Homepage](Screenshots/Home%20page%20after%20login.png) | ![Item Page](Screenshots/Home%20page%20before%20login.png) |
 
-| Admin Panel | Mobile View |
+| Admin Panel | User Dashboard |
 |-------------|-------------|
-| ![Admin Panel](screenshots/admin-panel.png) | ![Mobile View](screenshots/mobile-view.png) |
+| ![Admin Panel](Screenshots/Admin%20Panel.png) | ![User Dashboard View](Screenshots/User%20Dashboard.png) |
 
->  Place your screenshots in the `/screenshots/` folder in your repository.
+| View Item  | Sell Item |
+|-------------|-------------|
+| ![View Item](Screenshots/ViewItem%20Page.png) | ![Sell Item](Screenshots/Sell%20page.png) |
 
 ---
 
