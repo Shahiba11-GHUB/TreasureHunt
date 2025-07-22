@@ -1,0 +1,47 @@
+<?php
+session_start();
+require 'db.php';
+
+if (!isset($_SESSION['userid'])) {
+    echo json_encode(["success" => false, "message" => "You must be logged in to buy this item."]);
+    exit();
+}
+
+$userID = $_SESSION['userid'];
+$itemID = $_POST['itemID'] ?? null;
+
+if (!$itemID || !is_numeric($itemID)) {
+    echo json_encode(["success" => false, "message" => "Invalid item."]);
+    exit();
+}
+
+// Check item is available
+$stmt = $conn->prepare("SELECT * FROM Items WHERE ItemID = ? AND Status = 'Active' AND EndTime > NOW()");
+$stmt->execute([$itemID]);
+$item = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$item) {
+    echo json_encode(["success" => false, "message" => "Item is not available or auction has ended."]);
+    exit();
+}
+
+// Process purchase
+try {
+    $conn->beginTransaction();
+
+    // Update item as Sold
+    $conn->prepare("UPDATE Items SET Status = 'Sold', WinnerID = ?, FinalPrice = ? WHERE ItemID = ?")
+         ->execute([$userID, $item['StartingPrice'], $itemID]);
+
+    // Add to Purchases table (create this table if not done yet)
+    $conn->prepare("INSERT INTO Purchases (UserID, ItemID, PurchaseDate, Amount) VALUES (?, ?, NOW(), ?)")
+         ->execute([$userID, $itemID, $item['StartingPrice']]);
+
+    $conn->commit();
+
+    echo json_encode(["success" => true, "message" => " You purchased '{$item['Name']}' for \${$item['StartingPrice']}!"]);
+} catch (Exception $e) {
+    $conn->rollBack();
+    echo json_encode(["success" => false, "message" => " Purchase failed. Please try again."]);
+}
+?>
